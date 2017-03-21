@@ -16,32 +16,32 @@ def create_state(arr, size=PZ8SZ):
 '''
 
 class Problem:
-    def __init__(self, INITIAL_STATE, GOAL_STATE, ALL_ACTIONS, **OPTIONS):
+    def __init__(self, INITIAL_STATE, GOAL_STATE, ALL_ACTIONS, SIZE):
         self.INITIAL_STATE = INITIAL_STATE
         self.GOAL_STATE = GOAL_STATE
         self.ALL_ACTIONS = ALL_ACTIONS
-        if 'size' in OPTIONS.keys(): # [problem specified]
-            self.SIZE = OPTIONS['size']
+        self.SIZE = SIZE
+    def IN_BOUNDS(self, id):
+        (x, y) = id
+        return 0 <= x < self.SIZE[0] and 0 <= y < self.SIZE[1]
+    def FIND_ZERO(self, state):
+        location = np.where(state==0)
+        # TODO: assert location has values
+        return np.array([location[0][0],location[1][0]])
     def ACTIONS(self, state): # [problem specified]
-        l1  = np.where(state==0) # l1: location
-        # TODO: assert l1 has values
-        l1 = np.array([l1[0][0],l1[1][0]])
+        l1 = self.FIND_ZERO(state)
         feaaction = [] # feasible actions
         for action, actposi in self.ALL_ACTIONS.iteritems():
             l2 = l1 + actposi # l2: new_location
-            if l2[0] in range(self.SIZE[0]) and l2[1] in range(self.SIZE[1]):
+            if self.IN_BOUNDS(l2):
                 feaaction.append(action)
-        if len(feaaction)==0:
-            return []
-        else:
-            return feaaction
+        return feaaction
     def RESULT(self, p_state, action): # [problem specified]
-        l1 = np.where(p_state==0) # l1: location
-        # TODO: assert l1 has values
-        l1 = np.array([l1[0][0],l1[1][0]])
+        l1 = self.FIND_ZERO(state)
         l2 = l1 + self.ALL_ACTIONS[action] # l2: new_location
-        if l2[0] not in range(self.SIZE[0]) or l2[1] not in range(self.SIZE[1]):
-            return None
+        #if not self.IN_BOUNDS(l2):
+        #    print 'Never go through'
+        #    return None
         state = np.copy(p_state)
         state[l1[0],l1[1]],state[l2[0],l2[1]]=state[l2[0],l2[1]],state[l1[0],l1[1]]
         return state
@@ -79,7 +79,7 @@ state3 = State(size)
 init_state = state3.create(np.random.permutation(np.arange(np.prod(size))))
 goal_state = state3.create(np.arange(np.prod(size)))
 
-puzzle3 = Problem(init_state, goal_state, actions, size=size)
+puzzle3 = Problem(init_state, goal_state, actions, size)
 
 ### ================ ###
 ###      Search      ###
@@ -118,7 +118,7 @@ for l1 in range(totalNum):
                 state_list.append(l4)
                 init_state = state3.create([l1,l2,l3,l4])
                 print init_state
-                puzzle3 = Problem(init_state, goal_state, actions, size=size)
+                puzzle3 = Problem(init_state, goal_state, actions, size)
                 print '---BFS---'
                 solution = BREADTH_FIRST_SEARCH(puzzle3)
                 PRINT_SOLUTION(solution)
@@ -156,7 +156,7 @@ init_state = state8.create([3,1,2,4,5,8,6,0,7]) # 5 steps
 #init_state = state8.create(np.random.permutation(np.arange(np.prod(size))))
 goal_state = state8.create(np.arange(np.prod(size)))
 
-puzzle8 = Problem(init_state, goal_state, actions, size=size)
+puzzle8 = Problem(init_state, goal_state, actions, size)
 
 ### ================ ###
 ###      Search      ###

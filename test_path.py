@@ -1,14 +1,9 @@
 #!/usr/bin/env python
 __author__  = "Yuetan Lin"
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 from Search import *
 import numpy as np
-
-'''
-def create_state(arr, size=PZ8SZ):
-    return np.uint8(np.resize(np.array(arr),size))
-'''
 
 class Problem:
     def __init__(self, INITIAL_STATE, GOAL_STATE, ALL_ACTIONS, SIZE):
@@ -76,7 +71,8 @@ goal_state = (2,14)
 
 path = Problem(init_state, goal_state, actions, size)
 path.WALLS = [(0,8),(1,8),(2,8),(3,8),(4,8),(5,8),(6,8),
-              (3,11),(4,11),(5,11),(6,11),(7,11),(8,11),(9,11),(10,11),(11,11),(12,11),(13,11),(14,11)]
+              (3,11),(4,11),(5,11),(6,11),(7,11),(8,11),
+              (9,11),(10,11),(11,11),(12,11),(13,11),(14,11)]
 
 ### ================ ###
 ###      Search      ###
