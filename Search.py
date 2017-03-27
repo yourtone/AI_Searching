@@ -119,6 +119,10 @@ def DEPTH_LIMITED_SEARCH(problem, limit):
     node = Node(problem.INITIAL_STATE, None, 'Start', 0) # root node
     return RECURSIVE_DLS(node, problem, limit)
 
+def DEPTH_LIMITED_SEARCH_1(problem, limit):
+    node = Node(problem.INITIAL_STATE, None, 'Start', 0) # root node
+    return RECURSIVE_DLS_1(node, [], problem, limit)
+
 def DEPTH_LIMITED_SEARCH_2(problem, limit):
     node = Node(problem.INITIAL_STATE, None, 'Start', 0) # root node
     explored = []
@@ -144,7 +148,27 @@ def RECURSIVE_DLS(node, problem, limit):
         else:
             return None # failure
 
-def RECURSIVE_DLS_2(node, problem, limit, explored):
+def RECURSIVE_DLS_1(node, pnode, problem, limit): # do not repeat the node's grandfather
+    if problem.GOAL_TEST(node.STATE):
+        return SOLUTION(node)
+    elif limit == 0:
+        return cutoff
+    else:
+        cutoff_occurred = False
+        for action in problem.ACTIONS(node.STATE):
+            child = CHILD_NODE(problem, node, action)
+            if not A_IN_B(child.STATE, pnode):
+                result = RECURSIVE_DLS_1(child, [node], problem, limit-1)
+                if result == cutoff:
+                    cutoff_occurred = True
+                elif result: # not result == None
+                    return result
+        if cutoff_occurred:
+            return cutoff
+        else:
+            return None # failure
+
+def RECURSIVE_DLS_2(node, problem, limit, explored): # NOT guarantee to find best path
     explored.append(node.STATE)
     if problem.GOAL_TEST(node.STATE):
         return SOLUTION(node)
@@ -166,6 +190,24 @@ def RECURSIVE_DLS_2(node, problem, limit, explored):
             return None # failure
 
 def ITERATIVE_DEEPENING_SEARCH(problem):
+    depth = 0
+    while True:
+        print 'Current depth: ', depth
+        result = DEPTH_LIMITED_SEARCH(problem, depth)
+        if not result == cutoff:
+            return result
+        depth+=1
+
+def ITERATIVE_DEEPENING_SEARCH_1(problem):
+    depth = 0
+    while True:
+        print 'Current depth: ', depth
+        result = DEPTH_LIMITED_SEARCH_1(problem, depth)
+        if not result == cutoff:
+            return result
+        depth+=1
+
+def ITERATIVE_DEEPENING_SEARCH_2(problem):
     depth = 0
     while True:
         print 'Current depth: ', depth

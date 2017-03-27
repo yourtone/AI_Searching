@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 __author__  = "Yuetan Lin"
-__version__ = "1.0.1"
+__version__ = "1.0.3"
 
 from Search import *
 import numpy as np
@@ -66,26 +66,58 @@ def PRINT_SOLUTION(problem, solution, hascutoff=False):
 ### ================ ###
 actions = {'up':(-1,0), 'right':(0,1), 'down':(1,0), 'left':(0,-1)}
 size = (15,20)
-init_state = (4,5)
-goal_state = (2,14)
+init_state = (7,7) # (4,5)
+goal_state = (2,12)# (2,14)
 
 path = Problem(init_state, goal_state, actions, size)
 path.WALLS = [(0,8),(1,8),(2,8),(3,8),(4,8),(5,8),(6,8),
               (3,11),(4,11),(5,11),(6,11),(7,11),(8,11),
               (9,11),(10,11),(11,11),(12,11),(13,11),(14,11)]
 
+import time
 ### ================ ###
 ###      Search      ###
 ### ================ ###
 print '===Path Finding==='
+'''
+start_time = time.time()
 print '---BFS---'
 solution = BREADTH_FIRST_SEARCH(path)
 PRINT_SOLUTION(path, solution)
+print("--- %s seconds ---" % (time.time() - start_time))
 
+start_time = time.time()
+print '---UCS---'
+solution = UNIFORM_COST_SEARCH(path)
+PRINT_SOLUTION(path, solution)
+print("--- %s seconds ---" % (time.time() - start_time))
+
+start_time = time.time()
 print '---DFS---'
 solution = DEPTH_FIRST_SEARCH(path)
 PRINT_SOLUTION(path, solution)
+print("--- %s seconds ---" % (time.time() - start_time))
 
+start_time = time.time()
 print '---DLS---'
-solution = DEPTH_LIMITED_SEARCH_2(path, 40)
+solution = DEPTH_LIMITED_SEARCH(path, 10)
 PRINT_SOLUTION(path, solution, True)
+print("--- %s seconds ---" % (time.time() - start_time))
+
+start_time = time.time()
+print '---DLS1---'
+solution = DEPTH_LIMITED_SEARCH_1(path, 10)
+PRINT_SOLUTION(path, solution, True)
+print("--- %s seconds ---" % (time.time() - start_time))
+
+start_time = time.time()
+print '---DLS2---'
+solution = DEPTH_LIMITED_SEARCH_2(path, 10)
+PRINT_SOLUTION(path, solution, True)
+print("--- %s seconds ---" % (time.time() - start_time))
+'''
+start_time = time.time()
+print '---IDS---'
+solution = ITERATIVE_DEEPENING_SEARCH(path)
+PRINT_SOLUTION(path, solution, True)
+print("--- %s seconds ---" % (time.time() - start_time))

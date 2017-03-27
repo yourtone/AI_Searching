@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 __author__  = "Yuetan Lin"
-__version__ = "1.2.1"
+__version__ = "1.2.2"
 
 from Search import *
 import numpy as np
@@ -82,13 +82,30 @@ print '---BFS---'
 solution = BREADTH_FIRST_SEARCH(puzzle3)
 PRINT_SOLUTION(solution)
 
+print '---UCS---'
+solution = UNIFORM_COST_SEARCH(puzzle3)
+PRINT_SOLUTION(solution)
+
 print '---DFS---'
 solution = DEPTH_FIRST_SEARCH(puzzle3)
 PRINT_SOLUTION(solution)
 
 print '---DLS---'
+solution = DEPTH_LIMITED_SEARCH(puzzle3, 10)
+PRINT_SOLUTION(solution, True)
+
+print '---DLS1---'
+solution = DEPTH_LIMITED_SEARCH_1(puzzle3, 10)
+PRINT_SOLUTION(solution, True)
+
+print '---DLS2---'
 solution = DEPTH_LIMITED_SEARCH_2(puzzle3, 10)
 PRINT_SOLUTION(solution, True)
+
+if solution: # TO BE CHECKED
+    print '---IDS---'
+    solution = ITERATIVE_DEEPENING_SEARCH(puzzle3)
+    PRINT_SOLUTION(solution, True)
 
 
 ### ================ ###
@@ -97,7 +114,7 @@ PRINT_SOLUTION(solution, True)
 # puzzle 8
 size = PZ8SZ
 state8 = State(size)
-init_state = state8.create([1,0,2,6,4,8,7,5,3]) # 11 stesp
+#init_state = state8.create([1,0,2,6,4,8,7,5,3]) # 11 stesp
 init_state = state8.create([7,2,4,5,0,6,8,3,1])
 #init_state = state8.create(np.random.permutation(np.arange(np.prod(size))))
 goal_state = state8.create(np.arange(np.prod(size)))
