@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 __author__  = "Yuetan Lin"
-__version__ = "1.2.2"
+__version__ = "1.2.3"
 
 from Search import *
 import numpy as np
+from scipy.spatial.distance import cityblock
 
 PZ3SZ = (2,2)
 PZ8SZ = (3,3)
@@ -20,6 +21,10 @@ class Problem:
         self.GOAL_STATE = GOAL_STATE
         self.ALL_ACTIONS = ALL_ACTIONS
         self.SIZE = SIZE
+        self.Coordinates = {}
+        for i in xrange(SIZE[0]):
+            for j in xrange(SIZE[1]):
+                self.Coordinates[GOAL_STATE[i,j]] = (i,j)
     def IN_BOUNDS(self, id):
         (x, y) = id
         return 0 <= x < self.SIZE[0] and 0 <= y < self.SIZE[1]
@@ -47,13 +52,23 @@ class Problem:
         return 1 # cost 1 per move
     def GOAL_TEST(self, state): # [problem specified]
         return np.array_equal(state, self.GOAL_STATE)
+    def HEURISTIC(self, state): # [problem specified]
+        #sameStates = (state==self.GOAL_STATE).flatten()[1:]
+        #return np.prod(self.SIZE)-1-np.sum(sameStates)
+        dist = 0
+        for i in xrange(self.SIZE[0]):
+            for j in xrange(self.SIZE[1]):
+                value = state[i,j]
+                if not value == 0:
+                    dist += cityblock(np.int8(self.Coordinates[value]),(i,j))
+        return dist
 
 def PRINT_SOLUTION(solution, hascutoff=False):
     if solution:
         n_step = -1 # since the first one is root node
         for node in solution:
-            print node.ACTION
-            print node.STATE
+            #print node.ACTION
+            #print node.STATE
             n_step+=1
         print 'Finished in %d steps' % n_step
     elif hascutoff and (solution == cutoff):
@@ -74,6 +89,7 @@ goal_state = state3.create(np.arange(np.prod(size)))
 
 puzzle3 = Problem(init_state, goal_state, actions, size)
 
+import time
 ### ================ ###
 ###      Search      ###
 ### ================ ###
@@ -85,6 +101,18 @@ PRINT_SOLUTION(solution)
 print '---UCS---'
 solution = UNIFORM_COST_SEARCH(puzzle3)
 PRINT_SOLUTION(solution)
+
+start_time = time.time()
+print '---GBFS---'
+solution = GREEDY_BEST_FIRST_SEARCH(puzzle3)
+PRINT_SOLUTION(solution)
+print("--- %s seconds ---" % (time.time() - start_time))
+
+start_time = time.time()
+print '---AStar---'
+solution = A_STAR_SEARCH(puzzle3)
+PRINT_SOLUTION(solution)
+print("--- %s seconds ---" % (time.time() - start_time))
 
 print '---DFS---'
 solution = DEPTH_FIRST_SEARCH(puzzle3)
@@ -107,6 +135,72 @@ if solution: # TO BE CHECKED
     solution = ITERATIVE_DEEPENING_SEARCH(puzzle3)
     PRINT_SOLUTION(solution, True)
 
+'''
+state_list = []
+totalNum = np.prod(size)
+for l1 in xrange(totalNum):
+    state_list.append(l1)
+    for l2 in xrange(totalNum):
+        if l2 in state_list:
+            continue
+        state_list.append(l2)
+        for l3 in xrange(totalNum):
+            if l3 in state_list:
+                continue
+            state_list.append(l3)
+            for l4 in xrange(totalNum):
+                if l4 in state_list:
+                    continue
+                state_list.append(l4)
+                init_state = state3.create([l1,l2,l3,l4])
+                print init_state
+                puzzle3 = Problem(init_state, goal_state, actions, size)
+
+                print '===Puzzle 3==='
+                print '---BFS---'
+                solution = BREADTH_FIRST_SEARCH(puzzle3)
+                PRINT_SOLUTION(solution)
+
+                print '---UCS---'
+                solution = UNIFORM_COST_SEARCH(puzzle3)
+                PRINT_SOLUTION(solution)
+
+                print '---GBFS---'
+                solution = GREEDY_BEST_FIRST_SEARCH(puzzle3)
+                PRINT_SOLUTION(solution)
+
+                print '---AStar---'
+                solution = A_STAR_SEARCH(puzzle3)
+                PRINT_SOLUTION(solution)
+
+                print '---DFS---'
+                solution = DEPTH_FIRST_SEARCH(puzzle3)
+                PRINT_SOLUTION(solution)
+
+                print '---DLS---'
+                solution = DEPTH_LIMITED_SEARCH(puzzle3, 10)
+                PRINT_SOLUTION(solution, True)
+
+                print '---DLS1---'
+                solution = DEPTH_LIMITED_SEARCH_1(puzzle3, 10)
+                PRINT_SOLUTION(solution, True)
+
+                print '---DLS2---'
+                solution = DEPTH_LIMITED_SEARCH_2(puzzle3, 10)
+                PRINT_SOLUTION(solution, True)
+
+                if solution:
+                    print '---IDS---'
+                    solution = ITERATIVE_DEEPENING_SEARCH(puzzle3)
+                    PRINT_SOLUTION(solution, True)
+
+                raw_input()
+                state_list.pop()
+            state_list.pop()
+        state_list.pop()
+    state_list.pop()
+'''
+
 
 ### ================ ###
 ### Prepare problems ###
@@ -124,7 +218,7 @@ puzzle8 = Problem(init_state, goal_state, actions, size)
 ### ================ ###
 ###      Search      ###
 ### ================ ###
-print '===Puzzle 8==='
+#print '===Puzzle 8==='
 #print '---BFS---'
 #solution = BREADTH_FIRST_SEARCH(puzzle8)
 #PRINT_SOLUTION(solution)
@@ -132,6 +226,18 @@ print '===Puzzle 8==='
 #print '---UCS---'
 #solution = UNIFORM_COST_SEARCH(puzzle8)
 #PRINT_SOLUTION(solution)
+
+start_time = time.time()
+print '---GBFS---'
+solution = GREEDY_BEST_FIRST_SEARCH(puzzle8)
+PRINT_SOLUTION(solution)
+print("--- %s seconds ---" % (time.time() - start_time))
+
+start_time = time.time()
+print '---AStar---'
+solution = A_STAR_SEARCH(puzzle8)
+PRINT_SOLUTION(solution)
+print("--- %s seconds ---" % (time.time() - start_time))
 
 #print '---DFS---'
 #solution = DEPTH_FIRST_SEARCH(puzzle8)
@@ -141,6 +247,6 @@ print '===Puzzle 8==='
 #solution = DEPTH_LIMITED_SEARCH_2(puzzle8, 12)
 #PRINT_SOLUTION(solution, True)
 
-print '---IDS---'
-solution = ITERATIVE_DEEPENING_SEARCH(puzzle8)
-PRINT_SOLUTION(solution, True)
+#print '---IDS---'
+#solution = ITERATIVE_DEEPENING_SEARCH(puzzle8)
+#PRINT_SOLUTION(solution, True)

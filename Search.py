@@ -95,6 +95,50 @@ def UNIFORM_COST_SEARCH(problem):
 
     return None # failure
 
+def GREEDY_BEST_FIRST_SEARCH(problem):
+    node = Node(problem.INITIAL_STATE, None, 'Start', 0) # root node
+    frontier = PriorityQueue()
+    node.PATH_COST = problem.HEURISTIC(node.STATE)
+    frontier.INSERT(node.PATH_COST, node)
+    explored = []
+
+    while not frontier.EMPTY():
+        node = frontier.POP()
+        if problem.GOAL_TEST(node.STATE):
+            return SOLUTION(node)
+        explored.append(node.STATE)
+        for action in problem.ACTIONS(node.STATE):
+            child = CHILD_NODE(problem, node, action)
+            child.PATH_COST = problem.HEURISTIC(child.STATE)
+            if not A_IN_B(child.STATE, explored) and not A_IN_B(child.STATE, frontier):
+                frontier.INSERT(child.PATH_COST, child)
+            elif A_IN_B(child.STATE, frontier) and child.PATH_COST < GET_A_IN_B(child.STATE, frontier)[0]:
+                REPLACE_A_IN_B((child.PATH_COST, child), frontier)
+
+    return None # failure
+
+def A_STAR_SEARCH(problem):
+    node = Node(problem.INITIAL_STATE, None, 'Start', 0) # root node
+    frontier = PriorityQueue()
+    node.PATH_COST += problem.HEURISTIC(node.STATE)
+    frontier.INSERT(node.PATH_COST, node)
+    explored = []
+
+    while not frontier.EMPTY():
+        node = frontier.POP()
+        if problem.GOAL_TEST(node.STATE):
+            return SOLUTION(node)
+        explored.append(node.STATE)
+        for action in problem.ACTIONS(node.STATE):
+            child = CHILD_NODE(problem, node, action)
+            child.PATH_COST += problem.HEURISTIC(child.STATE)
+            if not A_IN_B(child.STATE, explored) and not A_IN_B(child.STATE, frontier):
+                frontier.INSERT(child.PATH_COST, child)
+            elif A_IN_B(child.STATE, frontier) and child.PATH_COST < GET_A_IN_B(child.STATE, frontier)[0]:
+                REPLACE_A_IN_B((child.PATH_COST, child), frontier)
+
+    return None # failure
+
 def DEPTH_FIRST_SEARCH(problem):
     node = Node(problem.INITIAL_STATE, None, 'Start', 0) # root node
     if problem.GOAL_TEST(node.STATE):
