@@ -88,13 +88,13 @@ solution = BREADTH_FIRST_SEARCH(path)
 PRINT_SOLUTION(path, solution)
 print("--- %s seconds ---" % (time.time() - start_time))
 
-'''
 start_time = time.time()
 print '---UCS---'
 solution = UNIFORM_COST_SEARCH(path)
 PRINT_SOLUTION(path, solution)
 print("--- %s seconds ---" % (time.time() - start_time))
 
+'''
 start_time = time.time()
 print '---DFS---'
 solution = DEPTH_FIRST_SEARCH(path)

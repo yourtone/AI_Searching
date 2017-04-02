@@ -78,7 +78,8 @@ def BREADTH_FIRST_SEARCH(problem):
 def UNIFORM_COST_SEARCH(problem):
     node = Node(problem.INITIAL_STATE, None, 'Start', 0) # root node
     frontier = PriorityQueue()
-    frontier.INSERT(node.PATH_COST, node)
+    priority = node.PATH_COST
+    frontier.INSERT(priority, node)
     explored = []
 
     while not frontier.EMPTY():
@@ -88,18 +89,19 @@ def UNIFORM_COST_SEARCH(problem):
         explored.append(node.STATE)
         for action in problem.ACTIONS(node.STATE):
             child = CHILD_NODE(problem, node, action)
+            priority = child.PATH_COST
             if not A_IN_B(child.STATE, explored) and not A_IN_B(child.STATE, frontier):
-                frontier.INSERT(child.PATH_COST, child)
-            elif A_IN_B(child.STATE, frontier) and child.PATH_COST < GET_A_IN_B(child.STATE, frontier)[0]:
-                REPLACE_A_IN_B((child.PATH_COST, child), frontier)
+                frontier.INSERT(priority, child)
+            elif A_IN_B(child.STATE, frontier) and priority < GET_A_IN_B(child.STATE, frontier)[0]:
+                REPLACE_A_IN_B((priority, child), frontier)
 
     return None # failure
 
 def GREEDY_BEST_FIRST_SEARCH(problem):
     node = Node(problem.INITIAL_STATE, None, 'Start', 0) # root node
     frontier = PriorityQueue()
-    node.PATH_COST = problem.HEURISTIC(node.STATE)
-    frontier.INSERT(node.PATH_COST, node)
+    priority = problem.HEURISTIC(node.STATE)
+    frontier.INSERT(priority, node)
     explored = []
 
     while not frontier.EMPTY():
@@ -109,19 +111,19 @@ def GREEDY_BEST_FIRST_SEARCH(problem):
         explored.append(node.STATE)
         for action in problem.ACTIONS(node.STATE):
             child = CHILD_NODE(problem, node, action)
-            child.PATH_COST = problem.HEURISTIC(child.STATE)
+            priority = problem.HEURISTIC(child.STATE)
             if not A_IN_B(child.STATE, explored) and not A_IN_B(child.STATE, frontier):
-                frontier.INSERT(child.PATH_COST, child)
-            elif A_IN_B(child.STATE, frontier) and child.PATH_COST < GET_A_IN_B(child.STATE, frontier)[0]:
-                REPLACE_A_IN_B((child.PATH_COST, child), frontier)
+                frontier.INSERT(priority, child)
+            elif A_IN_B(child.STATE, frontier) and priority < GET_A_IN_B(child.STATE, frontier)[0]:
+                REPLACE_A_IN_B((priority, child), frontier)
 
     return None # failure
 
 def A_STAR_SEARCH(problem):
     node = Node(problem.INITIAL_STATE, None, 'Start', 0) # root node
     frontier = PriorityQueue()
-    node.PATH_COST += problem.HEURISTIC(node.STATE)
-    frontier.INSERT(node.PATH_COST, node)
+    priority = node.PATH_COST + problem.HEURISTIC(node.STATE)
+    frontier.INSERT(priority, node)
     explored = []
 
     while not frontier.EMPTY():
@@ -131,11 +133,11 @@ def A_STAR_SEARCH(problem):
         explored.append(node.STATE)
         for action in problem.ACTIONS(node.STATE):
             child = CHILD_NODE(problem, node, action)
-            child.PATH_COST += problem.HEURISTIC(child.STATE)
+            priority = child.PATH_COST + problem.HEURISTIC(child.STATE)
             if not A_IN_B(child.STATE, explored) and not A_IN_B(child.STATE, frontier):
-                frontier.INSERT(child.PATH_COST, child)
-            elif A_IN_B(child.STATE, frontier) and child.PATH_COST < GET_A_IN_B(child.STATE, frontier)[0]:
-                REPLACE_A_IN_B((child.PATH_COST, child), frontier)
+                frontier.INSERT(priority, child)
+            elif A_IN_B(child.STATE, frontier) and priority < GET_A_IN_B(child.STATE, frontier)[0]:
+                REPLACE_A_IN_B((priority, child), frontier)
 
     return None # failure
 

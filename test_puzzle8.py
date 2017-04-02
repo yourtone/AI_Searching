@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 __author__  = "Yuetan Lin"
-__version__ = "1.2.3"
+__version__ = "1.3.0"
 
 from Search import *
 import numpy as np
 from scipy.spatial.distance import cityblock
+import time
 
 PZ3SZ = (2,2)
 PZ8SZ = (3,3)
@@ -67,8 +68,8 @@ def PRINT_SOLUTION(solution, hascutoff=False):
     if solution:
         n_step = -1 # since the first one is root node
         for node in solution:
-            #print node.ACTION
-            #print node.STATE
+            print node.ACTION
+            print node.STATE
             n_step+=1
         print 'Finished in %d steps' % n_step
     elif hascutoff and (solution == cutoff):
@@ -81,6 +82,8 @@ def PRINT_SOLUTION(solution, hascutoff=False):
 ### Prepare problems ###
 ### ================ ###
 actions = {'up':(-1,0), 'right':(0,1), 'down':(1,0), 'left':(0,-1)}
+
+'''
 # puzzle 3
 size = PZ3SZ
 state3 = State(size)
@@ -89,7 +92,6 @@ goal_state = state3.create(np.arange(np.prod(size)))
 
 puzzle3 = Problem(init_state, goal_state, actions, size)
 
-import time
 ### ================ ###
 ###      Search      ###
 ### ================ ###
@@ -135,70 +137,51 @@ if solution: # TO BE CHECKED
     solution = ITERATIVE_DEEPENING_SEARCH(puzzle3)
     PRINT_SOLUTION(solution, True)
 
-'''
-state_list = []
+import itertools
 totalNum = np.prod(size)
-for l1 in xrange(totalNum):
-    state_list.append(l1)
-    for l2 in xrange(totalNum):
-        if l2 in state_list:
-            continue
-        state_list.append(l2)
-        for l3 in xrange(totalNum):
-            if l3 in state_list:
-                continue
-            state_list.append(l3)
-            for l4 in xrange(totalNum):
-                if l4 in state_list:
-                    continue
-                state_list.append(l4)
-                init_state = state3.create([l1,l2,l3,l4])
-                print init_state
-                puzzle3 = Problem(init_state, goal_state, actions, size)
+for i in itertools.permutations(np.arange(totalNum)):
+    init_state = state3.create(i)
+    print init_state
+    puzzle3 = Problem(init_state, goal_state, actions, size)
 
-                print '===Puzzle 3==='
-                print '---BFS---'
-                solution = BREADTH_FIRST_SEARCH(puzzle3)
-                PRINT_SOLUTION(solution)
+    print '===Puzzle 3==='
+    print '---BFS---'
+    solution = BREADTH_FIRST_SEARCH(puzzle3)
+    PRINT_SOLUTION(solution)
 
-                print '---UCS---'
-                solution = UNIFORM_COST_SEARCH(puzzle3)
-                PRINT_SOLUTION(solution)
+    print '---UCS---'
+    solution = UNIFORM_COST_SEARCH(puzzle3)
+    PRINT_SOLUTION(solution)
 
-                print '---GBFS---'
-                solution = GREEDY_BEST_FIRST_SEARCH(puzzle3)
-                PRINT_SOLUTION(solution)
+    print '---GBFS---'
+    solution = GREEDY_BEST_FIRST_SEARCH(puzzle3)
+    PRINT_SOLUTION(solution)
 
-                print '---AStar---'
-                solution = A_STAR_SEARCH(puzzle3)
-                PRINT_SOLUTION(solution)
+    print '---AStar---'
+    solution = A_STAR_SEARCH(puzzle3)
+    PRINT_SOLUTION(solution)
 
-                print '---DFS---'
-                solution = DEPTH_FIRST_SEARCH(puzzle3)
-                PRINT_SOLUTION(solution)
+    print '---DFS---'
+    solution = DEPTH_FIRST_SEARCH(puzzle3)
+    PRINT_SOLUTION(solution)
 
-                print '---DLS---'
-                solution = DEPTH_LIMITED_SEARCH(puzzle3, 10)
-                PRINT_SOLUTION(solution, True)
+    print '---DLS---'
+    solution = DEPTH_LIMITED_SEARCH(puzzle3, 10)
+    PRINT_SOLUTION(solution, True)
 
-                print '---DLS1---'
-                solution = DEPTH_LIMITED_SEARCH_1(puzzle3, 10)
-                PRINT_SOLUTION(solution, True)
+    print '---DLS1---'
+    solution = DEPTH_LIMITED_SEARCH_1(puzzle3, 10)
+    PRINT_SOLUTION(solution, True)
 
-                print '---DLS2---'
-                solution = DEPTH_LIMITED_SEARCH_2(puzzle3, 10)
-                PRINT_SOLUTION(solution, True)
+    print '---DLS2---'
+    solution = DEPTH_LIMITED_SEARCH_2(puzzle3, 10)
+    PRINT_SOLUTION(solution, True)
 
-                if solution:
-                    print '---IDS---'
-                    solution = ITERATIVE_DEEPENING_SEARCH(puzzle3)
-                    PRINT_SOLUTION(solution, True)
-
-                raw_input()
-                state_list.pop()
-            state_list.pop()
-        state_list.pop()
-    state_list.pop()
+    if solution:
+        print '---IDS---'
+        solution = ITERATIVE_DEEPENING_SEARCH(puzzle3)
+        PRINT_SOLUTION(solution, True)
+    raw_input()
 '''
 
 
@@ -218,7 +201,7 @@ puzzle8 = Problem(init_state, goal_state, actions, size)
 ### ================ ###
 ###      Search      ###
 ### ================ ###
-#print '===Puzzle 8==='
+print '===Puzzle 8==='
 #print '---BFS---'
 #solution = BREADTH_FIRST_SEARCH(puzzle8)
 #PRINT_SOLUTION(solution)
