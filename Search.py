@@ -10,7 +10,7 @@ def NODE_TO_STR(node):
 
 def CHILD_NODE(problem, parent, action):
     state = problem.RESULT(parent.STATE, action)
-    if state == None:
+    if state is None:
         return None
     else:
         return Node(state, parent, action, parent.PATH_COST+problem.STEP_COST(parent.STATE, action))
@@ -45,13 +45,13 @@ def A_IN_B(A, B): # [problem specified]
 def GET_A_IN_B(A, B): # [problem specified]
     # TODO assert: isinstance(B, PriorityQueue)
     # TODO assert: not B.EMPTY()
-    return B.GETALL()[np.where([np.array_equal(A,x[1].STATE) for x in B.GETALL()])[0]]
+    return B.GETALL()[np.where([np.array_equal(A,x[1].STATE) for x in B.GETALL()])[0][0]]
 
 def REPLACE_A_IN_B(A, B): # [problem specified]
     # TODO assert: isinstance(B, PriorityQueue)
     # TODO assert: not B.EMPTY()
     (priority, A) = A
-    B.GETALL()[np.where([np.array_equal(A.STATE,x[1].STATE) for x in B.GETALL()])[0]] = (priority, A)
+    B.GETALL()[np.where([np.array_equal(A.STATE,x[1].STATE) for x in B.GETALL()])[0][0]] = (priority, A)
 
 
 

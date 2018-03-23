@@ -56,8 +56,7 @@ def PRINT_SOLUTION(problem, solution, hascutoff=False):
             for j in xrange(problem.SIZE[1]):
                 s+=infos.get((i,j)).rjust(3)
             s+='\n'
-        print s
-        print 'Finished in %d steps' % n_step
+        print s+ 'Finished in %d steps' % n_step
     elif hascutoff and (solution == cutoff):
         print 'Cutoff'
     else: # None
@@ -82,6 +81,7 @@ import time
 ###      Search      ###
 ### ================ ###
 print '===Path Finding==='
+'''
 start_time = time.time()
 print '---BFS---'
 solution = BREADTH_FIRST_SEARCH(path)
@@ -94,7 +94,6 @@ solution = UNIFORM_COST_SEARCH(path)
 PRINT_SOLUTION(path, solution)
 print("--- %s seconds ---" % (time.time() - start_time))
 
-'''
 start_time = time.time()
 print '---DFS---'
 solution = DEPTH_FIRST_SEARCH(path)

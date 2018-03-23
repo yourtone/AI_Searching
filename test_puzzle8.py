@@ -210,11 +210,11 @@ print '===Puzzle 8==='
 #solution = UNIFORM_COST_SEARCH(puzzle8)
 #PRINT_SOLUTION(solution)
 
-start_time = time.time()
-print '---GBFS---'
-solution = GREEDY_BEST_FIRST_SEARCH(puzzle8)
-PRINT_SOLUTION(solution)
-print("--- %s seconds ---" % (time.time() - start_time))
+#start_time = time.time()
+#print '---GBFS---'
+#solution = GREEDY_BEST_FIRST_SEARCH(puzzle8)
+#PRINT_SOLUTION(solution)
+#print("--- %s seconds ---" % (time.time() - start_time))
 
 start_time = time.time()
 print '---AStar---'
